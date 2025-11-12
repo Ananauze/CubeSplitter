@@ -9,9 +9,4 @@ public class Cube : MonoBehaviour
         OnClicked?.Invoke(this);
         Destroy(gameObject);
     }
-
-    private void OnMouseDown()
-    {
-        Click();
-    }
 }

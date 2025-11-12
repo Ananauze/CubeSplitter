@@ -1,6 +1,6 @@
 using UnityEngine;
 
-public class ExplosionManager : MonoBehaviour
+public class CubeExplosion : MonoBehaviour
 {
     [SerializeField] private float explosionForce = 300f;
     [SerializeField] private float explosionRadius = 2f;

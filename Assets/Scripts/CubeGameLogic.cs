@@ -1,29 +1,32 @@
 using UnityEngine;
 
-public class GameController : MonoBehaviour
+public class CubeGameplay : MonoBehaviour
 {
     [SerializeField] private CubeSpawner spawner;
-    [SerializeField] private ExplosionManager explosionManager;
-    [SerializeField] private InputRaycaster raycaster;
+    [SerializeField] private CubeExplosion explosionEffect;
+    [SerializeField] private InputHandler inputHandler;
+    [SerializeField] private RaycastProcessor raycastProcessor;
 
     private float splitChance = 1f;
 
     private const float SplitChanceDecay = 0.5f;
     private const int MinSplitCount = 2;
-    private const int MaxSplitCount = 6; 
+    private const int MaxSplitCount = 5;
     private const float SpawnOffsetRadius = 0.5f;
     private const float ScaleReductionFactor = 2f;
 
-    private void Start()
+    private void OnEnable()
     {
-        raycaster.CubeHit += OnCubeHit;
-
-        foreach (var cube in Object.FindObjectsByType<Cube>(FindObjectsSortMode.None))
-        {
-            cube.OnClicked += OnCubeClicked;
-        }
-
+        inputHandler.OnClickPosition += raycastProcessor.ProcessRaycast;
+        raycastProcessor.CubeHit += OnCubeHit;
         spawner.CubeClicked += OnCubeClicked;
+    }
+
+    private void OnDisable()
+    {
+        inputHandler.OnClickPosition -= raycastProcessor.ProcessRaycast;
+        raycastProcessor.CubeHit -= OnCubeHit;
+        spawner.CubeClicked -= OnCubeClicked;
     }
 
     private void OnCubeHit(Cube cube)
@@ -44,7 +47,7 @@ public class GameController : MonoBehaviour
                 cubes[i] = spawner.Spawn(cube.transform.position + offset, cube.transform.localScale / ScaleReductionFactor);
             }
 
-            explosionManager.Explode(cube.transform.position, cubes);
+            explosionEffect.Explode(cube.transform.position, cubes);
 
             splitChance *= SplitChanceDecay;
         }

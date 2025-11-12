@@ -1,31 +1,20 @@
 using UnityEngine;
 using System;
 
-public class InputRaycaster : MonoBehaviour
+public class RaycastProcessor : MonoBehaviour
 {
-    public event Action<Cube> CubeHit;
     [SerializeField] private Camera mainCamera;
+    public event Action<Cube> CubeHit;
 
-    private void Update()
+    public void ProcessRaycast(Vector2 screenPosition)
     {
-        if (Input.GetMouseButtonDown(0))
+        Ray ray = mainCamera.ScreenPointToRay(screenPosition);
+
+        if (Physics.Raycast(ray, out RaycastHit hit))
         {
-            Debug.Log("Mouse clicked"); 
-
-            Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-            if (Physics.Raycast(ray, out RaycastHit hit))
+            if (hit.collider.TryGetComponent<Cube>(out var cube))
             {
-                Debug.Log("Raycast hit: " + hit.collider.name); 
-
-                if (hit.collider.TryGetComponent(out Cube cube))
-                {
-                    Debug.Log("Hit cube: " + cube.name);
-                    CubeHit?.Invoke(cube);
-                }
-            }
-            else
-            {
-                Debug.Log("Raycast hit nothing"); 
+                CubeHit?.Invoke(cube);
             }
         }
     }
