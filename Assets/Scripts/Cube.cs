@@ -2,15 +2,16 @@ using UnityEngine;
 
 public class Cube : MonoBehaviour
 {
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
+    public event System.Action<Cube> OnClicked;
+
+    public void Click()
     {
-        
+        OnClicked?.Invoke(this);
+        Destroy(gameObject);
     }
 
-    // Update is called once per frame
-    void Update()
+    private void OnMouseDown()
     {
-        
+        Click();
     }
 }
