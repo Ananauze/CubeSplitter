@@ -31,7 +31,9 @@ public class CubeGameplay : MonoBehaviour
 
     private void OnCubeHit(Cube cube)
     {
-        cube.Click();
+        // Исключаем мгновенное уничтожение через cube.Click()
+        // Вызываем метод логики клика напрямую
+        OnCubeClicked(cube);
     }
 
     private void OnCubeClicked(Cube cube)

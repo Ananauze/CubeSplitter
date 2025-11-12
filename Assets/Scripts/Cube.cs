@@ -7,6 +7,5 @@ public class Cube : MonoBehaviour
     public void Click()
     {
         OnClicked?.Invoke(this);
-        Destroy(gameObject);
     }
 }
