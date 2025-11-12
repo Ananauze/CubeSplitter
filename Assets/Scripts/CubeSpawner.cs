@@ -3,17 +3,18 @@ using System.Collections.Generic;
 
 public class CubeSpawner : MonoBehaviour
 {
-    [SerializeField] private GameObject cubePrefab;
+    [SerializeField] private Cube _cubePrefab;
 
-    private readonly List<Cube> activeCubes = new();
+    public event System.Action<Cube> CubeClicked;
+
+    private readonly List<Cube> _activeCubes = new();
 
     public Cube Spawn(Vector3 position, Vector3 scale)
     {
-        var go = Instantiate(cubePrefab, position, Random.rotation);
-        go.transform.localScale = scale;
+        var cube = Instantiate(_cubePrefab, position, Random.rotation);
+        cube.transform.localScale = scale;
 
-        var cube = go.GetComponent<Cube>();
-        activeCubes.Add(cube);
+        _activeCubes.Add(cube);
         cube.OnClicked += HandleCubeClicked;
 
         return cube;
@@ -24,13 +25,9 @@ public class CubeSpawner : MonoBehaviour
         CubeClicked?.Invoke(cube);
     }
 
-    public event System.Action<Cube> CubeClicked;
-
     public void DestroyCube(Cube cube)
     {
-        if (activeCubes.Remove(cube))
-        {
-            Destroy(cube.gameObject);
-        }
+        _activeCubes.Remove(cube);
+        Destroy(cube.gameObject);
     }
 }

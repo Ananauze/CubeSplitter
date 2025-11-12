@@ -1,11 +1,11 @@
 using UnityEngine;
 
-public class CubeGameplay : MonoBehaviour
+public class CubeGameLogic : MonoBehaviour
 {
-    [SerializeField] private CubeSpawner spawner;
-    [SerializeField] private CubeExplosion explosionEffect;
-    [SerializeField] private InputHandler inputHandler;
-    [SerializeField] private RaycastProcessor raycastProcessor;
+    [SerializeField] private CubeSpawner _spawner;
+    [SerializeField] private CubeExplosion _explosionEffect;
+    [SerializeField] private InputHandler _inputHandler;
+    [SerializeField] private InputRaycaster _raycastProcessor;
 
     private float splitChance = 1f;
 
@@ -17,22 +17,30 @@ public class CubeGameplay : MonoBehaviour
 
     private void OnEnable()
     {
-        inputHandler.OnClickPosition += raycastProcessor.ProcessRaycast;
-        raycastProcessor.CubeHit += OnCubeHit;
-        spawner.CubeClicked += OnCubeClicked;
+        _inputHandler.OnClickPosition += _raycastProcessor.ProcessRaycast;
+        _raycastProcessor.CubeHit += OnCubeHit;
+        _spawner.CubeClicked += OnCubeClicked;
+
+        foreach (var cube in Object.FindObjectsByType<Cube>(FindObjectsSortMode.None))
+        {
+            cube.OnClicked += OnCubeClicked;
+        }
     }
 
     private void OnDisable()
     {
-        inputHandler.OnClickPosition -= raycastProcessor.ProcessRaycast;
-        raycastProcessor.CubeHit -= OnCubeHit;
-        spawner.CubeClicked -= OnCubeClicked;
+        _inputHandler.OnClickPosition -= _raycastProcessor.ProcessRaycast;
+        _raycastProcessor.CubeHit -= OnCubeHit;
+        _spawner.CubeClicked -= OnCubeClicked;
+
+        foreach (var cube in Object.FindObjectsByType<Cube>(FindObjectsSortMode.None))
+        {
+            cube.OnClicked -= OnCubeClicked;
+        }
     }
 
     private void OnCubeHit(Cube cube)
     {
-        // Исключаем мгновенное уничтожение через cube.Click()
-        // Вызываем метод логики клика напрямую
         OnCubeClicked(cube);
     }
 
@@ -46,14 +54,14 @@ public class CubeGameplay : MonoBehaviour
             for (int i = 0; i < count; i++)
             {
                 Vector3 offset = Random.insideUnitSphere * SpawnOffsetRadius;
-                cubes[i] = spawner.Spawn(cube.transform.position + offset, cube.transform.localScale / ScaleReductionFactor);
+                cubes[i] = _spawner.Spawn(cube.transform.position + offset, cube.transform.localScale / ScaleReductionFactor);
             }
 
-            explosionEffect.Explode(cube.transform.position, cubes);
+            _explosionEffect.Explode(cube.transform.position, cubes);
 
             splitChance *= SplitChanceDecay;
         }
 
-        spawner.DestroyCube(cube);
+        _spawner.DestroyCube(cube);
     }
 }
