@@ -675,10 +675,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 463e9f8810733458b85cada4a4fd869e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::GameController
-  spawner: {fileID: 1871984898}
-  explosionEffect: {fileID: 1922999343}
-  inputHandler: {fileID: 1055301355}
-  raycastProcessor: {fileID: 166175103}
+  _spawner: {fileID: 1871984898}
+  _explosionEffect: {fileID: 1922999343}
+  _inputHandler: {fileID: 1055301355}
+  _raycastProcessor: {fileID: 166175103}
 --- !u!4 &874916630
 Transform:
   m_ObjectHideFlags: 0

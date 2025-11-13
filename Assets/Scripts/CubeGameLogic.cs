@@ -35,7 +35,10 @@ public class CubeGameLogic : MonoBehaviour
 
         foreach (var cube in Object.FindObjectsByType<Cube>(FindObjectsSortMode.None))
         {
-            cube.OnClicked -= OnCubeClicked;
+            if (cube != null)
+            {
+                cube.OnClicked -= OnCubeClicked;
+            }
         }
     }
 
